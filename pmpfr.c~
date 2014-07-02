@@ -1,0 +1,250 @@
+/*
+
+gcc  -lm -lmpfr -lgmp -Wall -O2 pmpfr.c
+
+mpfr without use of explicit definition of complex numbers
+
+http://en.wikipedia.org/wiki/Floating_point
+
+type	bits of its significand		decimal digits 		nMax	time [sec]
+-----------------------------------------------------------------------------------
+                12						 6
+single 		24 bits			 7			12	0
+double 		53 bits			16			26	18
+extended	80						32	1200
+	       100						36	22081		
+It is about 20 times longer then c long double 
+
+"The 96-bit precision code is currently has a theoretical maximum speed of about 92 times slower than the SSE double-precision code "
+http://www.reenigne.org/blog/arbitrary-precision-mandelbrot-sets/
+
+
+
+
+
+Using MPFR-3.0.0-p8 with GMP-4.3.2 with precision = 53 bits and Escape Radius = 2.000000 
+n =   1 distance = 5.0000000000e-01 LI =          3 log2(LI) =   2; time =  0 seconds 
+n =   2 distance = 2.5000000000e-01 LI =          5 log2(LI) =   2; time =  0 seconds 
+n =   3 distance = 1.2500000000e-01 LI =         10 log2(LI) =   3; time =  0 seconds 
+n =   4 distance = 6.2500000000e-02 LI =         19 log2(LI) =   4; time =  0 seconds 
+n =   5 distance = 3.1250000000e-02 LI =         35 log2(LI) =   5; time =  0 seconds 
+n =   6 distance = 1.5625000000e-02 LI =         68 log2(LI) =   6; time =  0 seconds 
+n =   7 distance = 7.8125000000e-03 LI =        133 log2(LI) =   7; time =  0 seconds 
+n =   8 distance = 3.9062500000e-03 LI =        261 log2(LI) =   8; time =  0 seconds 
+n =   9 distance = 1.9531250000e-03 LI =        518 log2(LI) =   9; time =  0 seconds 
+n =  10 distance = 9.7656250000e-04 LI =       1031 log2(LI) =  10; time =  0 seconds 
+n =  11 distance = 4.8828125000e-04 LI =       2055 log2(LI) =  11; time =  0 seconds 
+n =  12 distance = 2.4414062500e-04 LI =       4104 log2(LI) =  12; time =  0 seconds 
+n =  13 distance = 1.2207031250e-04 LI =       8201 log2(LI) =  13; time =  0 seconds 
+n =  14 distance = 6.1035156250e-05 LI =      16394 log2(LI) =  14; time =  0 seconds 
+n =  15 distance = 3.0517578125e-05 LI =      32778 log2(LI) =  15; time =  0 seconds 
+n =  16 distance = 1.5258789062e-05 LI =      65547 log2(LI) =  16; time =  0 seconds 
+n =  17 distance = 7.6293945312e-06 LI =     131084 log2(LI) =  17; time =  0 seconds 
+n =  18 distance = 3.8146972656e-06 LI =     262157 log2(LI) =  18; time =  0 seconds 
+n =  19 distance = 1.9073486328e-06 LI =     524304 log2(LI) =  19; time =  1 seconds 
+n =  20 distance = 9.5367431641e-07 LI =    1048611 log2(LI) =  20; time =  0 seconds 
+n =  21 distance = 4.7683715820e-07 LI =    2097337 log2(LI) =  21; time =  1 seconds 
+n =  22 distance = 2.3841857910e-07 LI =    4195685 log2(LI) =  22; time =  1 seconds 
+n =  23 distance = 1.1920928955e-07 LI =    8399559 log2(LI) =  23; time =  3 seconds 
+n =  24 distance = 5.9604644775e-08 LI =   16865020 log2(LI) =  24; time =  6 seconds 
+n =  25 distance = 2.9802322388e-08 LI =   34266184 log2(LI) =  25; time = 13 seconds 
+n =  26 distance = 1.4901161194e-08 LI =   73058473 log2(LI) =  26; time = 26 seconds 
+
+MPFR-3.0.0-p8 with GMP-4.3.2 with precision = 80
+n =   1 distance = 5.0000000000e-01 LI =          3 log2(LI) =   2; time =  0 seconds 
+n =   2 distance = 2.5000000000e-01 LI =          5 log2(LI) =   2; time =  0 seconds 
+n =   3 distance = 1.2500000000e-01 LI =         10 log2(LI) =   3; time =  0 seconds 
+n =   4 distance = 6.2500000000e-02 LI =         19 log2(LI) =   4; time =  0 seconds 
+n =   5 distance = 3.1250000000e-02 LI =         35 log2(LI) =   5; time =  0 seconds 
+n =   6 distance = 1.5625000000e-02 LI =         68 log2(LI) =   6; time =  0 seconds 
+n =   7 distance = 7.8125000000e-03 LI =        133 log2(LI) =   7; time =  0 seconds 
+n =   8 distance = 3.9062500000e-03 LI =        261 log2(LI) =   8; time =  0 seconds 
+n =   9 distance = 1.9531250000e-03 LI =        518 log2(LI) =   9; time =  0 seconds 
+n =  10 distance = 9.7656250000e-04 LI =       1031 log2(LI) =  10; time =  0 seconds 
+n =  11 distance = 4.8828125000e-04 LI =       2055 log2(LI) =  11; time =  0 seconds 
+n =  12 distance = 2.4414062500e-04 LI =       4104 log2(LI) =  12; time =  0 seconds 
+n =  13 distance = 1.2207031250e-04 LI =       8201 log2(LI) =  13; time =  0 seconds 
+n =  14 distance = 6.1035156250e-05 LI =      16394 log2(LI) =  14; time =  0 seconds 
+n =  15 distance = 3.0517578125e-05 LI =      32778 log2(LI) =  15; time =  0 seconds 
+n =  16 distance = 1.5258789062e-05 LI =      65547 log2(LI) =  16; time =  0 seconds 
+n =  17 distance = 7.6293945312e-06 LI =     131084 log2(LI) =  17; time =  0 seconds 
+n =  18 distance = 3.8146972656e-06 LI =     262156 log2(LI) =  18; time =  0 seconds 
+n =  19 distance = 1.9073486328e-06 LI =     524301 log2(LI) =  19; time =  0 seconds 
+n =  20 distance = 9.5367431641e-07 LI =    1048590 log2(LI) =  20; time =  1 seconds 
+n =  21 distance = 4.7683715820e-07 LI =    2097166 log2(LI) =  21; time =  0 seconds 
+n =  22 distance = 2.3841857910e-07 LI =    4194319 log2(LI) =  22; time =  1 seconds 
+n =  23 distance = 1.1920928955e-07 LI =    8388624 log2(LI) =  23; time =  3 seconds 
+n =  24 distance = 5.9604644775e-08 LI =   16777232 log2(LI) =  24; time =  4 seconds 
+n =  25 distance = 2.9802322388e-08 LI =   33554449 log2(LI) =  25; time = 10 seconds 
+n =  26 distance = 1.4901161194e-08 LI =   67108882 log2(LI) =  26; time = 20 seconds 
+n =  27 distance = 7.4505805969e-09 LI =  134217747 log2(LI) =  27; time = 39 seconds 
+n =  28 distance = 3.7252902985e-09 LI =  268435476 log2(LI) =  28; time = 78 seconds 
+n =  29 distance = 1.8626451492e-09 LI =  536870933 log2(LI) =  29; time = 152 seconds 
+n =  30 distance = 9.3132257462e-10 LI = 1073741846 log2(LI) =  30; time = 298 seconds 
+n =  31 distance = 4.6566128731e-10 LI = 2147483671 log2(LI) =  31; time = 596 seconds 
+n =  32 distance = 2.3283064365e-10 LI = 4294967320 log2(LI) =  32; time = 1206 seconds 
+
+
+
+
+Using MPFR-3.0.0-p8 with GMP-4.3.2 with precision = 100 bits and Escape Radius = 2.000000 
+n =   1 distance = 5.0000000000e-01 LI =          3 log2(LI) =   2; time =  0 seconds 
+n =   2 distance = 2.5000000000e-01 LI =          5 log2(LI) =   2; time =  0 seconds 
+n =   3 distance = 1.2500000000e-01 LI =         10 log2(LI) =   3; time =  0 seconds 
+n =   4 distance = 6.2500000000e-02 LI =         19 log2(LI) =   4; time =  0 seconds 
+n =   5 distance = 3.1250000000e-02 LI =         35 log2(LI) =   5; time =  0 seconds 
+n =   6 distance = 1.5625000000e-02 LI =         68 log2(LI) =   6; time =  0 seconds 
+n =   7 distance = 7.8125000000e-03 LI =        133 log2(LI) =   7; time =  0 seconds 
+n =   8 distance = 3.9062500000e-03 LI =        261 log2(LI) =   8; time =  0 seconds 
+n =   9 distance = 1.9531250000e-03 LI =        518 log2(LI) =   9; time =  0 seconds 
+n =  10 distance = 9.7656250000e-04 LI =       1031 log2(LI) =  10; time =  0 seconds 
+n =  11 distance = 4.8828125000e-04 LI =       2055 log2(LI) =  11; time =  0 seconds 
+n =  12 distance = 2.4414062500e-04 LI =       4104 log2(LI) =  12; time =  0 seconds 
+n =  13 distance = 1.2207031250e-04 LI =       8201 log2(LI) =  13; time =  0 seconds 
+n =  14 distance = 6.1035156250e-05 LI =      16394 log2(LI) =  14; time =  0 seconds 
+n =  15 distance = 3.0517578125e-05 LI =      32778 log2(LI) =  15; time =  0 seconds 
+n =  16 distance = 1.5258789062e-05 LI =      65547 log2(LI) =  16; time =  0 seconds 
+n =  17 distance = 7.6293945312e-06 LI =     131084 log2(LI) =  17; time =  0 seconds 
+n =  18 distance = 3.8146972656e-06 LI =     262156 log2(LI) =  18; time =  0 seconds 
+n =  19 distance = 1.9073486328e-06 LI =     524301 log2(LI) =  19; time =  0 seconds 
+n =  20 distance = 9.5367431641e-07 LI =    1048590 log2(LI) =  20; time =  1 seconds 
+n =  21 distance = 4.7683715820e-07 LI =    2097166 log2(LI) =  21; time =  0 seconds 
+n =  22 distance = 2.3841857910e-07 LI =    4194319 log2(LI) =  22; time =  2 seconds 
+n =  23 distance = 1.1920928955e-07 LI =    8388624 log2(LI) =  23; time =  2 seconds 
+n =  24 distance = 5.9604644775e-08 LI =   16777232 log2(LI) =  24; time =  6 seconds 
+n =  25 distance = 2.9802322388e-08 LI =   33554449 log2(LI) =  25; time = 11 seconds 
+n =  26 distance = 1.4901161194e-08 LI =   67108882 log2(LI) =  26; time = 21 seconds 
+n =  27 distance = 7.4505805969e-09 LI =  134217747 log2(LI) =  27; time = 42 seconds 
+n =  28 distance = 3.7252902985e-09 LI =  268435475 log2(LI) =  28; time = 87 seconds 
+n =  29 distance = 1.8626451492e-09 LI =  536870932 log2(LI) =  29; time = 175 seconds 
+n =  30 distance = 9.3132257462e-10 LI = 1073741845 log2(LI) =  30; time = 351 seconds 
+n =  31 distance = 4.6566128731e-10 LI = 2147483669 log2(LI) =  31; time = 698 seconds 
+n =  32 distance = 2.3283064365e-10 LI = 4294967318 log2(LI) =  32; time = 1386 seconds 
+n =  33 distance = 1.1641532183e-10 LI = 8589934615 log2(LI) =  33; time = 2714 seconds 
+n =  34 distance = 5.8207660913e-11 LI = 17179869207 log2(LI) =  34; time = 5595 seconds 
+n =  35 distance = 2.9103830457e-11 LI = 34359738392 log2(LI) =  35; time = 11175 seconds 
+n =  36 distance = 1.4551915228e-11 LI = 68719476762 log2(LI) =  36; time = 22081 seconds 
+
+
+
+
+*/
+#include <stdio.h>
+#include <math.h> // log2
+#include <gmp.h>
+#include <mpfr.h>
+#include <time.h>
+
+   // MPFR general settings
+  mpfr_prec_t precision = 53; // the number of bits used to represent the significand of a floating-point number
+  mpfr_rnd_t RoundMode = MPFR_RNDD; // the way to round the result of a floating-point operation, round toward minus infinity (roundTowardNegative in IEEE 754-2008),
+
+
+
+
+// z(i+1) = fc(zi) = zi^2 + c
+// iteration of z under complex quadratic polynomial
+double GiveLastIteration_mpfr(
+                     mpfr_t zx,
+                     mpfr_t zy,
+                     mpfr_t cx,
+                     mpfr_t cy,    
+                     mpfr_t ER2)
+{
+    
+    double i=0.0;
+    mpfr_t temp; // temporary variable 
+    mpfr_t zx2; // zx^2
+    mpfr_t zy2; // zy^2
+
+    // initializes MPFR variables with default_prec
+   mpfr_inits(temp, zx2, zy2, (mpfr_ptr) 0 ); 
+    
+    mpfr_mul(   zy2,   zy,  zy,    RoundMode); /* zy2 = zy * zy; */
+    mpfr_mul(   zx2,   zx,  zx,    RoundMode); /* zx2 = zx * zx; */
+    mpfr_add(   temp,   zx2,  zy2,   RoundMode); //  temp = zx2 + zy2
+    
+    while (mpfr_greater_p(ER2, temp)) //  while  (Zx2+Zy2<ER2
+    {
+        /* zy = 2.0*zx*zy + cy; */
+        mpfr_mul(   temp,     zx,    zy,    RoundMode); // temp = zx*zy
+        mpfr_mul_ui(temp,     temp,     2.0,      RoundMode); // temp = 2 * temp = 2*zx*zy
+        mpfr_add(  zy,    temp,     cy,   RoundMode);
+        /* zx = zx^2 - zy^2 + cx; */
+        mpfr_sub(   temp,     zx2,   zy2,   RoundMode); // temp = zx^2 - zy^2
+        mpfr_add(   zx,    temp,     cx,   RoundMode); //  temp = temp + cx
+        //
+        mpfr_mul(   zy2,   zy,  zy,    RoundMode); /* zy2 = zy * zy; */
+        mpfr_mul(   zx2,   zx,  zx,    RoundMode); /* zx2 = zx * zx; */
+        mpfr_add(   temp,   zx2,  zy2,   RoundMode); //  temp = zx2 + zy2
+        i+=1.0;
+    }
+
+
+     mpfr_clears (temp, zx2, zy2, (mpfr_ptr) 0 );
+    return i;
+}
+
+
+
+
+
+int main (void)
+{
+   
+  
+  // declares variables
+
+   
+   double LastIteration;
+   time_t start,end;
+   double dif;
+   int n;
+   mpfr_t zpx, zpy;  // parabolic fixed point zp = zpx + zpy*I = 0.5 for c=1/4
+   mpfr_t zx, zy;  //  point z = zx + zy*I 
+   mpfr_t distance; // between zp and z
+   mpfr_t cx, cy;  //  point c = cx + cy*
+
+   mpfr_t base;
+   mpfr_t ER ; // Escape Radius ; it defines target set  = { z: abs(z)>ER}; all points z in the target set are escaping to infinity
+   mpfr_t ER2; // ER2= ER * ER
+   
+
+  mpfr_set_default_prec(precision);
+  // initializes MPFR variables with default_prec
+  mpfr_inits(ER, ER2, zpx, zpy, zx, zy, distance, cx, cy, base, (mpfr_ptr) 0 ); 
+
+  // Assignment Functions
+  mpfr_set_ld (zpx, 0.5, RoundMode);
+  mpfr_set_ld (zpy, 0.0, RoundMode);
+  mpfr_set_ld (zy, 0.0, RoundMode);
+  mpfr_set_ld (cx, 0.25, RoundMode);
+  mpfr_set_ld (cy, 0.0, RoundMode);
+  mpfr_set_ld (base, 2.0, RoundMode);
+  mpfr_set_ld (ER, 2.0, RoundMode);
+  
+    
+  // computations
+  mpfr_mul(ER2,  ER,     ER,      RoundMode); // 
+  mpfr_printf ("Using MPFR-%s with GMP-%s with precision = %u bits and Escape Radius = %Rf \n", mpfr_version, gmp_version, (unsigned int) precision, ER);
+  for (n = 1; n <= 60; n++)
+    {
+     time (&start);
+     mpfr_pow_si(distance,base, - n, RoundMode);
+     mpfr_add(zx, zpx, distance, RoundMode);
+     LastIteration = GiveLastIteration_mpfr(zx, zy, cx, cy, ER2);
+     time (&end);
+     dif = difftime(end,start);
+     mpfr_printf ("n = %3d distance = %.10Re LI = %10.0f log2(LI) = %3.0f; time = %2.0f seconds \n", n,  distance, LastIteration, log2(LastIteration), dif);
+    }
+  
+ 
+
+  // free the space used by the MPFR variables
+  mpfr_clears (ER, ER2, zpx, zpy, zx, zy, distance, cx, cy, base, (mpfr_ptr) 0);
+  mpfr_free_cache ();  /* free the cache for constants like pi */
+  
+
+return 0;
+}
+
